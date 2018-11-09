@@ -1,7 +1,6 @@
 package si.photos.by.d.album.models.entities;
 
 import si.photos.by.d.album.models.dtos.Photo;
-import si.photos.by.d.album.models.dtos.User;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,8 +18,8 @@ public class Album {
     @Column(name = "album_name")
     private String name;
 
-    @Transient
-    private User user;
+    @Column(name = "user_id")
+    private Integer userId;
 
     @Transient
     private List<Photo> photos;
@@ -41,19 +40,19 @@ public class Album {
         this.name = name;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public List<Photo> getPhotos() {
         return photos;
     }
 
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

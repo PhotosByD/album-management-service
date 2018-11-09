@@ -4,6 +4,7 @@
         <non-jta-data-source>jdbc/PhotoDS</non-jta-data-source>
 
         <class>si.photos.by.d.album.models.entities.Album</class>
+        <class>si.photos.by.d.album.models.entities.AlbumPhoto</class>
         <class>si.photos.by.d.album.models.converters.InstantAtributeConverter</class>
 
         <properties>
