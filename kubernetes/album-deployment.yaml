@@ -13,7 +13,7 @@ spec:
         app: album
     spec:
       containers:
-        - image: photosbyd/album-service:0.2
+        - image: photosbyd/album-service:0.3
           name: album
           env:
           - name: KUMULUZEE_DISCOVERY_CLUSTER
@@ -23,7 +23,7 @@ spec:
           - name: KUMULUZEE_CONFIG_ETCD_HOSTS
             value: http://etcd:2379
           - name: KUMULUZEE_SERVER_BASEURL
-            value: http://159.122.187.8:8082
+            value: http://159.122.187.8:32417
           - name: KUMULUZEE_DATASOURCES0_PASSWORD
             valueFrom:
               secretKeyRef:
