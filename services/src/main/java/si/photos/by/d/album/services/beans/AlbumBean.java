@@ -12,6 +12,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
@@ -94,6 +95,73 @@ public class AlbumBean {
             }
         }
         return null;
+    }
+
+    public Album createAlbum(Album album) {
+        try {
+            beginTx();
+            em.persist(album);
+            commitTx();
+        } catch (Exception e) {
+            log.warning("There was a problem with saving new album");
+            rollbackTx();
+        }
+        log.info("Successfully saved new album");
+        return album;
+    }
+
+    public Album updateAlbum(Integer albumId, Album album) {
+        Album u = em.find(Album.class, albumId);
+
+        if (u == null) return null;
+
+        try {
+            beginTx();
+            album.setId(albumId);
+            em.merge(album);
+            commitTx();
+        } catch (Exception e) {
+            log.warning("There was a problem with updating album");
+            rollbackTx();
+        }
+        log.info("Successfully updated album");
+        return album;
+    }
+
+    public AlbumPhoto addPhotoToAlbum(AlbumPhoto albumPhoto) {
+        try {
+            beginTx();
+            em.persist(albumPhoto);
+            commitTx();
+        } catch (Exception e) {
+            log.warning("There was a problem with saving photo to album");
+            rollbackTx();
+        }
+        log.info("Successfully saved photo to album");
+        return albumPhoto;
+    }
+
+    public boolean deleteAlbum(Integer albumId) {
+        Album album = em.find(Album.class, albumId);
+
+        if (album != null) {
+            try {
+                beginTx();
+                em.remove(album);
+                commitTx();
+            } catch (Exception e) {
+                rollbackTx();
+            }
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean deletePhotoFromAlbum(Integer photoId, Integer albumId) {
+        //TODO
+        return true;
     }
 
     private void beginTx() {

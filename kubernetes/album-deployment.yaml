@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: album-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: album
+  template:
+    metadata:
+      labels:
+        app: album
+    spec:
+      containers:
+        - image: photosbyd/album-service:0.2
+          name: album
+          env:
+          - name: KUMULUZEE_DISCOVERY_CLUSTER
+            value: private-coreos
+          - name: KUMULUZEE_DISCOVERY_ETCD_HOSTS
+            value: http://etcd:2379
+          - name: KUMULUZEE_CONFIG_ETCD_HOSTS
+            value: http://etcd:2379
+          - name: KUMULUZEE_SERVER_BASEURL
+            value: http://159.122.187.8:8082
+          - name: KUMULUZEE_DATASOURCES0_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pg-pass
+                key: KUMULUZEE_DATASOURCES0_PASSWORD
+          - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
+            value: jdbc:postgresql://sl-eu-gb-p02.dblayer.com:15881/compose
+          - name: KUMULUZEE_DATASOURCES0_USERNAME
+            value: admin
+          ports:
+          - containerPort: 8082
+            name: server
+            protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: album
+spec:
+  type: NodePort
+  ports:
+  - port: 8082
+    protocol: TCP
+    targetPort: 8082
+  selector:
+    app: album
