@@ -3,10 +3,12 @@ package si.photos.by.d.album.api.v1.resources;
 
 import com.kumuluz.ee.logs.cdi.Log;
 import si.photos.by.d.album.models.entities.Album;
+import si.photos.by.d.album.models.entities.AlbumPhoto;
 import si.photos.by.d.album.services.beans.AlbumBean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -82,6 +84,29 @@ public class AlbumResources {
     public Response deleteAlbum(@PathParam("albumId") Integer albumId) {
 
         boolean deleted = albumBean.deleteAlbum(albumId);
+
+        if (deleted) {
+            return Response.status(Response.Status.GONE).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @POST
+    public Response addPhotoToAlbum(AlbumPhoto albumPhoto) {
+        albumPhoto = albumBean.addPhotoToAlbum(albumPhoto);
+
+        if (albumPhoto.getId() != null) {
+            return Response.status(Response.Status.CREATED).entity(albumPhoto).build();
+        } else {
+            return Response.status(Response.Status.CONFLICT).entity(albumPhoto).build();
+        }
+    }
+
+    @DELETE
+    @Path("{albumId}/photo/{photoId}")
+    public Response deletePhotoFromAlbum(@PathParam("photoId")Integer photoId, @PathParam("albumId") Integer albumId) {
+        boolean deleted = albumBean.deletePhotoFromAlbum(photoId, albumId);
 
         if (deleted) {
             return Response.status(Response.Status.GONE).build();
