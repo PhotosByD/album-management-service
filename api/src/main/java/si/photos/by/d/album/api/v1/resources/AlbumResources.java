@@ -93,6 +93,7 @@ public class AlbumResources {
     }
 
     @POST
+    @Path("{idAlbum}")
     public Response addPhotoToAlbum(AlbumPhoto albumPhoto) {
         albumPhoto = albumBean.addPhotoToAlbum(albumPhoto);
 
